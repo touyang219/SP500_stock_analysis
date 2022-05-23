@@ -54,3 +54,4 @@ returns_long = returns_long %>% left_join(sp500, by = c("Ticker" = "Ticker"))
 
 save(returns_long, file = "returns_long.csv")
 
+
