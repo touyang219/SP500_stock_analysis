@@ -1,5 +1,91 @@
 
 shinyServer(function(input, output) {
 
-
+  # Price Chart
+  output$price_chart = renderPlot({
+  
+  price_data = returns_long %>% filter(Ticker == input$ticker_select, Series == "Close")
+  
+  price_chart = ggplot(price_data) +
+    geom_line(aes(x = Date, y = Value), color = "#0066ff") +
+    xlab("Date") +
+    ylab("Stock Price") +
+    labs(
+      title = paste0(price_data$Name[1], " (", input$ticker_select, ")"),
+      subtitle = paste0("Sector: ", price_data$Sector[1], "\n", "Industry: ",  price_data$Industry[1]),
+      caption = "Source: Yahoo! Finance"
+    ) + 
+    scale_y_continuous(labels = scales::dollar) +
+    theme(
+      plot.background = element_rect(fill = "#17202A"),
+      panel.background = element_rect(fill = "#17202A"),
+      axis.text.x = element_text(color = "#ffffff", angle = 45, hjust = 1, vjust = 1),
+      axis.text.y = element_text(color = "#ffffff"),
+      axis.title.y = element_text(color = "#ffffff"),
+      axis.title.x = element_text(color = "#ffffff"),
+      plot.title = element_text(color = "#ffffff"),
+      plot.subtitle = element_text(color = "#ffffff"),
+      plot.caption = element_text(color = "#ffffff", face = "italic", size = 6),
+      panel.grid.major.x = element_blank(),
+      panel.grid.major.y = element_line(color = "#273746"),
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      legend.position = "none",
+      
+    )
+  
+  price_chart
+  })
+  
+  # Performance Charting
+  output$performance_chart = renderPlot({
+    
+  performance_summary_data = performance_summary %>%
+    filter(Ticker == input$ticker_select) %>% 
+    select(one_month, three_months, six_months, one_year, five_years)
+  
+  performance_summary_data = performance_summary_data %>% gather("Period", "Return")
+  
+  performance_summary_data = performance_summary_data %>% mutate(
+    Period = case_when(
+      Period == "one_month" ~ "1 Month",
+      Period == "three_months" ~ "3 Months",
+      Period == "six_months" ~ "6 Months",
+      Period == "one_year" ~ "1 Year",
+      Period == "five_years" ~ "5 Years",
+      
+    )
+  )
+  
+  performance_summary_data$Period = factor(performance_summary_data$Period, levels = c("1 Month", "3 Months", "6 Months", "1 Year", "5 Years"))
+  
+  performance_chart = ggplot(performance_summary_data) +
+    geom_bar(aes(x = Period, y = Return), stat = "identity", fill = "#0066ff") +
+    xlab("Period") +
+    ylab("Annualized Return") + # Industry Standard to not annualize 1 month or 1 quarter
+    labs(
+      title = "Returns",
+      caption = "Source: Yahoo! Finance"
+    ) + 
+    scale_y_continuous(labels = scales::percent) +
+    theme(
+      plot.background = element_rect(fill = "#17202A"),
+      panel.background = element_rect(fill = "#17202A"),
+      axis.text.x = element_text(color = "#ffffff", angle = 45, hjust = 1, vjust = 1),
+      axis.text.y = element_text(color = "#ffffff"),
+      axis.title.y = element_text(color = "#ffffff"),
+      axis.title.x = element_text(color = "#ffffff"),
+      plot.title = element_text(color = "#ffffff"),
+      plot.subtitle = element_text(color = "#ffffff"),
+      plot.caption = element_text(color = "#ffffff", face = "italic", size = 6),
+      panel.grid.major.x = element_blank(),
+      panel.grid.major.y = element_line(color = "#273746"),
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      legend.position = "none",
+      
+    )
+  
+  performance_chart
+  })
 })
