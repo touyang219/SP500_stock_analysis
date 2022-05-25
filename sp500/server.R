@@ -17,8 +17,8 @@ shinyServer(function(input, output) {
     ) + 
     scale_y_continuous(labels = scales::dollar) +
     theme(
-      plot.background = element_rect(fill = "#17202A"),
-      panel.background = element_rect(fill = "#17202A"),
+      plot.background = element_rect(fill = "#000000"),
+      panel.background = element_rect(fill = "#000000"),
       axis.text.x = element_text(color = "#ffffff", angle = 45, hjust = 1, vjust = 1),
       axis.text.y = element_text(color = "#ffffff"),
       axis.title.y = element_text(color = "#ffffff"),
@@ -42,7 +42,7 @@ shinyServer(function(input, output) {
     
   performance_summary_data = performance_summary %>%
     filter(Ticker == input$ticker_select) %>% 
-    select(one_month, three_months, six_months, one_year, five_years)
+    select(one_month, three_months, six_months, one_year)
   
   performance_summary_data = performance_summary_data %>% gather("Period", "Return")
   
@@ -52,7 +52,6 @@ shinyServer(function(input, output) {
       Period == "three_months" ~ "3 Months",
       Period == "six_months" ~ "6 Months",
       Period == "one_year" ~ "1 Year",
-      Period == "five_years" ~ "5 Years",
       
     )
   )
@@ -61,16 +60,16 @@ shinyServer(function(input, output) {
   
   performance_chart = ggplot(performance_summary_data) +
     geom_bar(aes(x = Period, y = Return), stat = "identity", fill = "#0066ff") +
-    xlab("Period") +
-    ylab("Annualized Return") + # Industry Standard to not annualize 1 month or 1 quarter
+    xlab(" Time Period") +
+    ylab("Returns in Percent") +
     labs(
-      title = "Returns",
+      title = "Returns over Different Time Periods",
       caption = "Source: Yahoo! Finance"
     ) + 
     scale_y_continuous(labels = scales::percent) +
     theme(
-      plot.background = element_rect(fill = "#17202A"),
-      panel.background = element_rect(fill = "#17202A"),
+      plot.background = element_rect(fill = "#000000"),
+      panel.background = element_rect(fill = "#000000"),
       axis.text.x = element_text(color = "#ffffff", angle = 45, hjust = 1, vjust = 1),
       axis.text.y = element_text(color = "#ffffff"),
       axis.title.y = element_text(color = "#ffffff"),

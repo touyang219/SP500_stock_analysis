@@ -58,8 +58,8 @@ returns_long = returns_long %>% left_join(sp500, by = c("Ticker" = "Ticker"))
 
 # Calculating Performance
 
-performance_summary = as.data.frame(matrix(NA, ncol = 6, nrow = 0))
-names(performance_summary) = c("Ticker", "one_month", "three_months", "six_months", "one_year", "five_years")
+performance_summary = as.data.frame(matrix(NA, ncol = 5, nrow = 0))
+names(performance_summary) = c("Ticker", "one_month", "three_months", "six_months", "one_year")
 
 i = 1
 for(ticker in unique(returns_long$Ticker)){
@@ -69,14 +69,12 @@ for(ticker in unique(returns_long$Ticker)){
   three_months = (returns_long_by_ticker$Value[1] - returns_long_by_ticker$Value[63])/returns_long_by_ticker$Value[63]
   six_months = (returns_long_by_ticker$Value[1] - returns_long_by_ticker$Value[126])/returns_long_by_ticker$Value[126]
   one_year = (returns_long_by_ticker$Value[1] - returns_long_by_ticker$Value[253])/returns_long_by_ticker$Value[253]
-  five_years = (1 + ((returns_long_by_ticker$Value[1] - returns_long_by_ticker$Value[1265])/returns_long_by_ticker$Value[1265]))^(1/5)-1
-
+  
   performance_summary[i, 1] = ticker
   performance_summary[i, 2] = one_month
   performance_summary[i, 3] = three_months
   performance_summary[i, 4] = six_months
   performance_summary[i, 5] = one_year
-  performance_summary[i, 6] = five_years
   
   i = i+1
 }
