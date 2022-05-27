@@ -12,7 +12,7 @@ shinyServer(function(input, output) {
     ylab("Stock Price") +
     labs(
       title = paste0(price_data$Name[1], " (", input$ticker_select, ")"),
-      subtitle = paste0("Sector: ", price_data$Sector[1], "\n", "Industry: ",  price_data$Industry[1]),
+      # subtitle = paste0("Sector: ", price_data$Sector[1], "\n", "Industry: ",  price_data$Industry[1]),
       caption = "Source: Yahoo! Finance"
     ) + 
     scale_y_continuous(labels = scales::dollar) +
@@ -23,7 +23,7 @@ shinyServer(function(input, output) {
       axis.text.y = element_text(color = "#ffffff"),
       axis.title.y = element_text(color = "#ffffff"),
       axis.title.x = element_text(color = "#ffffff"),
-      plot.title = element_text(color = "#ffffff"),
+      plot.title = element_text(color = "#ffffff", hjust = 0.5),
       plot.subtitle = element_text(color = "#ffffff"),
       plot.caption = element_text(color = "#ffffff", face = "italic", size = 6),
       panel.grid.major.x = element_blank(),
@@ -36,6 +36,48 @@ shinyServer(function(input, output) {
   
   price_chart
   })
+  
+  output$candlestick = renderPlot({
+    
+    charting_data = returns_long %>% filter(Ticker == input$ticker_select, Date >= "2022-03-27") 
+    
+    # candlestick = ggplot(charting_data) +
+    #   geom_boxplot(aes(x = as.character(Date), y = Value, fill = Movement), color = "#D0D2D4", width= 0.2) +
+    #   scale_fill_manual(values = c(Up = "#0066ff", Down = "#ffff00")) +
+    #   xlab("Date") +
+    #   ylab("Stock Price")+
+    #   labs(
+    #     title = paste0(charting_data$Name[1], " (", input$ticker_select, ")"),
+    #     caption = "Source: Yahoo! Finance"
+    #   ) +
+    #   scale_y_continuous(labels = scales::dollar) +
+    #   theme(
+    #     plot.background = element_rect(fill = "#000000"),
+    #     panel.background = element_rect(fill = "#000000"),
+    #     axis.text.x = element_text(color = "#ffffff", angle = 45, hjust = 1, vjust = 1),
+    #     axis.text.y = element_text(color = "#ffffff"),
+    #     axis.title.y = element_text(color = "#ffffff"),
+    #     axis.title.x = element_text(color = "#ffffff"),
+    #     plot.title = element_text(color = "#ffffff", hjust = 0.5),
+    #     plot.subtitle = element_text(color = "#ffffff"),
+    #     plot.caption = element_text(color = "#ffffff", face = "italic", size = 6),
+    #     panel.grid.major.x = element_blank(),
+    #     panel.grid.major.y = element_line(color = "#273746"),
+    #     panel.grid.minor.x = element_blank(),
+    #     panel.grid.minor.y = element_blank(),
+    #     legend.position = "none",
+    #     
+    #   )
+    
+    candlestick = charting_data %>% plot_ly(x = ~Date, type="candlestick",
+                                            open = ~Open, close = ~Close,
+                                            high = ~High, low = ~Low)
+    
+    candlestick = candlestick %>% layout(title = "Candlestick Chart")
+    
+    candlestick
+  })
+  
   
   # Performance Charting
   output$performance_chart = renderPlot({
@@ -63,7 +105,7 @@ shinyServer(function(input, output) {
     xlab(" Time Period") +
     ylab("Returns in Percent") +
     labs(
-      title = "Returns over Different Time Periods",
+      title = "Percent Returns over Different Time Periods",
       caption = "Source: Yahoo! Finance"
     ) + 
     scale_y_continuous(labels = scales::percent) +
@@ -74,7 +116,7 @@ shinyServer(function(input, output) {
       axis.text.y = element_text(color = "#ffffff"),
       axis.title.y = element_text(color = "#ffffff"),
       axis.title.x = element_text(color = "#ffffff"),
-      plot.title = element_text(color = "#ffffff"),
+      plot.title = element_text(color = "#ffffff", hjust = 0.5),
       plot.subtitle = element_text(color = "#ffffff"),
       plot.caption = element_text(color = "#ffffff", face = "italic", size = 6),
       panel.grid.major.x = element_blank(),
@@ -82,9 +124,31 @@ shinyServer(function(input, output) {
       panel.grid.minor.x = element_blank(),
       panel.grid.minor.y = element_blank(),
       legend.position = "none",
-      
     )
   
   performance_chart
   })
+  
+  # Summary Details
+  output$sector = renderInfoBox({
+    sector = sp500 %>% filter(Ticker == input$ticker_select) %>% pull(Sector)
+    infoBox(title = "Sector",value = sector, icon = icon("fa-solid fa-chart-pie"))
+  })
+  
+  output$industry = renderInfoBox({
+    industry = sp500 %>% filter(Ticker == input$ticker_select) %>% pull(Industry)
+    infoBox(title = "Industry",value = industry, icon = icon("fa-solid fa-industry"))
+  })
+  
+  output$location = renderInfoBox({
+    location = sp500 %>% filter(Ticker == input$ticker_select) %>% pull(Location)
+    infoBox(title = "HQ Location",value = location, icon = icon("fa-solid fa-building"))
+  })
+  
+  output$founded = renderInfoBox({
+    founded = sp500 %>% filter(Ticker == input$ticker_select) %>% pull(Founded)
+    infoBox(title = "Year Founded", value = founded, icon = icon("fa-solid fa-calendar"))
+  })
+  
+  
 })

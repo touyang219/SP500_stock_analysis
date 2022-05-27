@@ -3,6 +3,7 @@ library(readr)
 library(tidyverse)
 library(shiny)
 library(shinydashboard)
+library(plotly)
 
 # Getting Data of Companies in SP500
 
@@ -35,6 +36,7 @@ for (symbol in sp500$Ticker) {
     returns = rbind(returns, ret)
   }
 }
+
 names(returns) = c("Date", "Open", "High", "Low", "Close", "Adj_Close", "Volume", "Ticker")
 returns = returns %>% select("Date", "Ticker", "Open", "High", "Low", "Close")
 
@@ -80,6 +82,5 @@ for(ticker in unique(returns_long$Ticker)){
 }
 
 performance_summary = performance_summary %>% left_join(sp500, by = c("Ticker" = "Ticker"))
-
 
 

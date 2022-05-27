@@ -9,10 +9,17 @@ shinyUI(
       
       fluidRow(
         column(
-          width = 12,
+          width = 6, 
           box(
             width = "100%",
             plotOutput('price_chart')
+          )
+        ),
+        column(
+          width = 6,
+          box(
+            width = "100%",
+            plotOutput('candlestick')
           )
         )
       ),
@@ -24,8 +31,17 @@ shinyUI(
           plotOutput('performance_chart')
         )
       
+      ),
+      column(
+        width = 6,
+        infoBoxOutput("sector", width = 6),
+        infoBoxOutput("industry", width = 6),
+        infoBoxOutput("location", width = 6), 
+        infoBoxOutput("founded", width =6)
+        
       )
     ),
+      )
+    )
   )
-)
-)
+
