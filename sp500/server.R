@@ -1,3 +1,4 @@
+library(plotly)
 
 shinyServer(function(input, output) {
 
@@ -37,46 +38,6 @@ shinyServer(function(input, output) {
   price_chart
   })
   
-  output$candlestick = renderPlot({
-    
-    charting_data = returns_long %>% filter(Ticker == input$ticker_select, Date >= "2022-03-27") 
-    
-    # candlestick = ggplot(charting_data) +
-    #   geom_boxplot(aes(x = as.character(Date), y = Value, fill = Movement), color = "#D0D2D4", width= 0.2) +
-    #   scale_fill_manual(values = c(Up = "#0066ff", Down = "#ffff00")) +
-    #   xlab("Date") +
-    #   ylab("Stock Price")+
-    #   labs(
-    #     title = paste0(charting_data$Name[1], " (", input$ticker_select, ")"),
-    #     caption = "Source: Yahoo! Finance"
-    #   ) +
-    #   scale_y_continuous(labels = scales::dollar) +
-    #   theme(
-    #     plot.background = element_rect(fill = "#000000"),
-    #     panel.background = element_rect(fill = "#000000"),
-    #     axis.text.x = element_text(color = "#ffffff", angle = 45, hjust = 1, vjust = 1),
-    #     axis.text.y = element_text(color = "#ffffff"),
-    #     axis.title.y = element_text(color = "#ffffff"),
-    #     axis.title.x = element_text(color = "#ffffff"),
-    #     plot.title = element_text(color = "#ffffff", hjust = 0.5),
-    #     plot.subtitle = element_text(color = "#ffffff"),
-    #     plot.caption = element_text(color = "#ffffff", face = "italic", size = 6),
-    #     panel.grid.major.x = element_blank(),
-    #     panel.grid.major.y = element_line(color = "#273746"),
-    #     panel.grid.minor.x = element_blank(),
-    #     panel.grid.minor.y = element_blank(),
-    #     legend.position = "none",
-    #     
-    #   )
-    
-    candlestick = charting_data %>% plot_ly(x = ~Date, type="candlestick",
-                                            open = ~Open, close = ~Close,
-                                            high = ~High, low = ~Low)
-    
-    candlestick = candlestick %>% layout(title = "Candlestick Chart")
-    
-    candlestick
-  })
   
   
   # Performance Charting

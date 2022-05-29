@@ -9,20 +9,13 @@ shinyUI(
       
       fluidRow(
         column(
-          width = 6, 
+          width = 12, 
           box(
             width = "100%",
             plotOutput('price_chart')
           )
         ),
-        column(
-          width = 6,
-          box(
-            width = "100%",
-            plotOutput('candlestick')
-          )
-        )
-      ),
+       
       fluidRow(
         column(
         width = 6,
@@ -44,4 +37,4 @@ shinyUI(
       )
     )
   )
-
+)
