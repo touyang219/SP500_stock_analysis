@@ -3,7 +3,12 @@ shinyUI(
   dashboardPage(
     dashboardHeader(title = "Stock Performance Analyzer"),
     dashboardSidebar(
-      selectInput("ticker_select", "Ticker", sp500$Ticker)
+      selectInput("ticker_select", "Ticker", sp500$Ticker),
+      dateRangeInput("daterange", "Date range:",
+                     start = min(returns$Date),
+                     end   = max(returns$Date) 
+                     )
+      
     ),
     dashboardBody(
       

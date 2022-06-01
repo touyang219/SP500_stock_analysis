@@ -5,7 +5,7 @@ shinyServer(function(input, output) {
   # Price Chart
   output$price_chart = renderPlot({
   
-  price_data = returns_long %>% filter(Ticker == input$ticker_select, Series == "Close")
+  price_data = returns_long %>% filter(Date %in% seq(input$daterange[1],input$daterange[2],by = "day"), Ticker == input$ticker_select, Series == "Close")
   
   price_chart = ggplot(price_data) +
     geom_line(aes(x = Date, y = Value), color = "#0066ff") +
@@ -37,7 +37,6 @@ shinyServer(function(input, output) {
   
   price_chart
   })
-  
   
   
   # Performance Charting
