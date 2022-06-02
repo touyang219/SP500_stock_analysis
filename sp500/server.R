@@ -1,4 +1,3 @@
-library(plotly)
 
 shinyServer(function(input, output) {
 
@@ -44,7 +43,7 @@ shinyServer(function(input, output) {
     
   performance_summary_data = performance_summary %>%
     filter(Ticker == input$ticker_select) %>% 
-    select(one_month, three_months, six_months, one_year)
+    select(one_month, three_months, six_months, one_year, five_years)
   
   performance_summary_data = performance_summary_data %>% gather("Period", "Return")
   
@@ -54,7 +53,8 @@ shinyServer(function(input, output) {
       Period == "three_months" ~ "3 Months",
       Period == "six_months" ~ "6 Months",
       Period == "one_year" ~ "1 Year",
-      
+      Period == "five_years" ~ "5 Years",
+    
     )
   )
   
@@ -65,7 +65,7 @@ shinyServer(function(input, output) {
     xlab(" Time Period") +
     ylab("Returns in Percent") +
     labs(
-      title = "Percent Returns over Different Time Periods",
+      title = "Percent Returns (relative to 5/20/2022) over Different Time Periods",
       caption = "Source: Yahoo! Finance"
     ) + 
     scale_y_continuous(labels = scales::percent) +
